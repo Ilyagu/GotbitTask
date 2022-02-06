@@ -1,0 +1,142 @@
+basePath: /api/v1
+definitions:
+  models.Task:
+    properties:
+      completed:
+        type: boolean
+      created:
+        type: string
+      creator:
+        type: string
+      description:
+        type: string
+      executor:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+    type: object
+  responses.Response:
+    properties:
+      message:
+        type: string
+    type: object
+host: localhost:8081
+info:
+  contact: {}
+  description: API server for tasks list application.
+  title: GotBit API
+  version: "1.0"
+paths:
+  /task:
+    post:
+      consumes:
+      - application/json
+      description: creating task
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Task'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Response'
+      summary: CreateTask
+      tags:
+      - task
+  /task/{id}:
+    delete:
+      description: deleting task by id
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Task'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Response'
+      summary: DeleteTask
+      tags:
+      - task
+  /task/all:
+    get:
+      description: getting all tasks
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Task'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Response'
+      summary: GetAllTasks
+      tags:
+      - task
+  /task/mark:
+    put:
+      consumes:
+      - application/json
+      description: mark task to completed or not completed by id
+      parameters:
+      - description: account info
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/models.Task'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Task'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.Response'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/responses.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.Response'
+      summary: MarkTas
+      tags:
+      - task
+swagger: "2.0"

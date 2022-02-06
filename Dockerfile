@@ -16,7 +16,7 @@ USER postgres
 
 RUN /etc/init.d/postgresql start &&\
     psql --command "CREATE USER ilyagu WITH SUPERUSER PASSWORD 'password';" &&\
-    createdb -O ilyagu forum &&\
+    createdb -O ilyagu gotbit &&\
     /etc/init.d/postgresql stop
 
 
@@ -29,6 +29,7 @@ WORKDIR /usr/src/app
 COPY . .
 COPY --from=build /app/main/ .
 
-EXPOSE 5000
+EXPOSE 8081
+EXPOSE 8080
 ENV PGPASSWORD password
-CMD service postgresql start && psql -h localhost -d forum -U ilyagu -p 5432 -a -q -f ./scripts/init_db.sql && ./main
+CMD service postgresql start && psql -h localhost -d gotbit -U ilyagu -p 5432 -a -q -f ./scripts/init_db.sql && ./main

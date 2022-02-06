@@ -17,7 +17,7 @@ var (
 	_ easyjson.Marshaler
 )
 
-func easyjson559270aeDecodeDbprojectInternalPkgResponses(in *jlexer.Lexer, out *Response) {
+func easyjson559270aeDecodeGotbittaskInternalPkgResponses(in *jlexer.Lexer, out *Response) {
 	isTopLevel := in.IsStart()
 	if in.IsNull() {
 		if isTopLevel {
@@ -48,7 +48,7 @@ func easyjson559270aeDecodeDbprojectInternalPkgResponses(in *jlexer.Lexer, out *
 		in.Consumed()
 	}
 }
-func easyjson559270aeEncodeDbprojectInternalPkgResponses(out *jwriter.Writer, in Response) {
+func easyjson559270aeEncodeGotbittaskInternalPkgResponses(out *jwriter.Writer, in Response) {
 	out.RawByte('{')
 	first := true
 	_ = first
@@ -63,23 +63,23 @@ func easyjson559270aeEncodeDbprojectInternalPkgResponses(out *jwriter.Writer, in
 // MarshalJSON supports json.Marshaler interface
 func (v Response) MarshalJSON() ([]byte, error) {
 	w := jwriter.Writer{}
-	easyjson559270aeEncodeDbprojectInternalPkgResponses(&w, v)
+	easyjson559270aeEncodeGotbittaskInternalPkgResponses(&w, v)
 	return w.Buffer.BuildBytes(), w.Error
 }
 
 // MarshalEasyJSON supports easyjson.Marshaler interface
 func (v Response) MarshalEasyJSON(w *jwriter.Writer) {
-	easyjson559270aeEncodeDbprojectInternalPkgResponses(w, v)
+	easyjson559270aeEncodeGotbittaskInternalPkgResponses(w, v)
 }
 
 // UnmarshalJSON supports json.Unmarshaler interface
 func (v *Response) UnmarshalJSON(data []byte) error {
 	r := jlexer.Lexer{Data: data}
-	easyjson559270aeDecodeDbprojectInternalPkgResponses(&r, v)
+	easyjson559270aeDecodeGotbittaskInternalPkgResponses(&r, v)
 	return r.Error()
 }
 
 // UnmarshalEasyJSON supports easyjson.Unmarshaler interface
 func (v *Response) UnmarshalEasyJSON(l *jlexer.Lexer) {
-	easyjson559270aeDecodeDbprojectInternalPkgResponses(l, v)
+	easyjson559270aeDecodeGotbittaskInternalPkgResponses(l, v)
 }

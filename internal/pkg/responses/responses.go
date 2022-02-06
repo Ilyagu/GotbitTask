@@ -1,15 +1,10 @@
 package responses
 
 import (
-	"errors"
 	"log"
 	"net/http"
 
 	"github.com/valyala/fasthttp"
-)
-
-var (
-	UserNotExsists = errors.New("user not exists")
 )
 
 //easyjson:json

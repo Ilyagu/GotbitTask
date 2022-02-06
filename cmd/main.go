@@ -2,30 +2,34 @@ package main
 
 import (
 	"context"
-	fd "dbproject/internal/app/forum/delivery"
-	fr "dbproject/internal/app/forum/repository"
-	fu "dbproject/internal/app/forum/usecase"
-	pd "dbproject/internal/app/post/delivery"
-	pr "dbproject/internal/app/post/repository"
-	pu "dbproject/internal/app/post/usecase"
-	td "dbproject/internal/app/thread/delivery"
-	tr "dbproject/internal/app/thread/repository"
-	tu "dbproject/internal/app/thread/usecase"
-	ud "dbproject/internal/app/user/delivery"
-	ur "dbproject/internal/app/user/repository"
-	uu "dbproject/internal/app/user/usecase"
+	"fmt"
+	"gotbittask/internal/app/task/delivery"
+	"gotbittask/internal/app/task/repository"
+	"gotbittask/internal/app/task/usecase"
 	"log"
 
+	_ "gotbittask/docs"
+
 	"github.com/fasthttp/router"
+	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v4/pgxpool"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"github.com/valyala/fasthttp"
 )
+
+// @title           GotBit API
+// @version         1.0
+// @description     API server for tasks list application.
+
+// @host      localhost:8081
+// @BasePath  /api/v1
 
 func main() {
 	router := router.New()
 
 	dbpool, err := pgxpool.Connect(context.Background(),
-		"host=localhost port=5432 user=ilyagu dbname=forum password=password sslmode=disable",
+		"host=localhost port=5432 user=ilyagu dbname=gotbit password=password sslmode=disable",
 	)
 	if err != nil {
 		log.Fatalf("Unable to connect to database: %v\n", err)
@@ -34,23 +38,24 @@ func main() {
 	defer dbpool.Close()
 
 	// repositories
-	userRepo := ur.NewUserRepository(dbpool)
-	forumRepo := fr.NewForumRepository(dbpool)
-	threadRepo := tr.NewThreadRepository(dbpool)
-	postRepo := pr.NewPostRepository(dbpool)
+	taskRepo := repository.NewTaskRepo(dbpool)
 
 	// usecases
-	userUC := uu.NewUserUsecase(userRepo)
-	forumUC := fu.NewForumUsecase(forumRepo, userRepo)
-	threadUC := tu.NewThreadUsecase(threadRepo, userRepo, forumRepo)
-	postUC := pu.NewPostUsecase(threadRepo, postRepo, userRepo, forumRepo)
+	taskUsecase := usecase.NewTaskUsecase(taskRepo)
 
-	// delivety
-	fd.NewForumHandler(router, forumUC, userUC)
-	ud.NewUserHandler(router, userUC)
-	td.NewThreadHandler(router, threadUC, forumUC)
-	pd.NewPostHandler(router, threadUC, postUC)
+	// delivery
+	delivery.NewTaskHandler(router, taskUsecase)
 
-	err = fasthttp.ListenAndServe(":5000", router.Handler)
+	// swagger
+	fmt.Print("\nDocumentaion on http://localhost:8080/swagger/index.html\n\n")
+
+	r := gin.New()
+
+	// use ginSwagger middleware to serve the API docs
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
+	r.Run()
+
+	err = fasthttp.ListenAndServe(":8081", router.Handler)
 	log.Fatal(err)
 }
